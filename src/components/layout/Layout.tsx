@@ -17,7 +17,7 @@ export function Layout({ children }: LayoutProps) {
       />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1 lg:ml-64">
+        <main className="flex-1">
           <div className="p-4 lg:p-8">
             {children}
           </div>
