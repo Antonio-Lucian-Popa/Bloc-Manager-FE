@@ -10,6 +10,7 @@ import {
   Receipt,
   CreditCard,
   MessageSquare,
+  Settings,
   BarChart3,
   Wrench,
   DollarSign,
@@ -157,11 +158,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          'fixed top-0 left-0 z-50 h-screen w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
+          'fixed top-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
+          'h-screen flex flex-col',
           open ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
+        {/* Header */}
+        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center">
             <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">AP</span>
@@ -180,7 +183,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           </Button>
         </div>
 
-        <nav className="mt-8 px-4">
+        {/* Navigation */}
+        <nav className="flex-1 px-4 py-8 overflow-y-auto">
           <ul className="space-y-2">
             {navigationItems.map((item) => {
               const Icon = item.icon;

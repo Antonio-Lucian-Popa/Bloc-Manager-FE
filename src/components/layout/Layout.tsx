@@ -10,15 +10,15 @@ export function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50">
       <Navbar 
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         sidebarOpen={sidebarOpen}
       />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex">
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1">
-          <div className="p-4 lg:p-8">
+        <main className="flex-1 min-w-0 pt-16">
+          <div className="pt-16 p-4 lg:p-8">
             {children}
           </div>
         </main>
