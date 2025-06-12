@@ -31,6 +31,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // TODO: sa repun asta fara comentari pentru securitate
   // if (!user) {
   //   return <AuthContainer />;
   // }
