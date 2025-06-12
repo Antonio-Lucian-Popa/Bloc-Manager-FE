@@ -351,7 +351,7 @@ export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
 
         <div className="text-center">
           <p className="text-xs text-gray-500">
-            © 2024 ApartmentPro. Toate drepturile rezervate.
+            © {new Date().getFullYear()} ApartmentPro. Toate drepturile rezervate.
           </p>
         </div>
       </div>
