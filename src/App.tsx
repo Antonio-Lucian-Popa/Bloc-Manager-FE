@@ -31,9 +31,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!user) {
-    return <AuthContainer />;
-  }
+  // if (!user) {
+  //   return <AuthContainer />;
+  // }
 
   return <Layout>{children}</Layout>;
 }
