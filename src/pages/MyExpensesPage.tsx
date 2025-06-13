@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { apiService } from '@/services/api';
+import { getApartmentExpenses } from '@/services/expenseService';
 import { useToast } from '@/hooks/use-toast';
 import { ApartmentExpense } from '@/types';
 import { CreatePaymentModal } from '@/components/modals/CreatePaymentModal';
@@ -23,7 +25,7 @@ export function MyExpensesPage() {
     try {
       // For demo purposes, using apartment ID 1
       const apartmentId = '1';
-      const data = await apiService.getApartmentExpenses(apartmentId);
+      const data = await getApartmentExpenses(apartmentId);
       setExpenses(data);
     } catch (error) {
       toast({
@@ -86,7 +88,7 @@ export function MyExpensesPage() {
       header: 'Status',
       cell: ({ row }: any) => {
         const status = row.original.status;
-        const variant = status === 'PAID' ? 'success' : status === 'OVERDUE' ? 'destructive' : 'secondary';
+        const variant = status === 'PAID' ? 'default' : status === 'OVERDUE' ? 'destructive' : 'secondary';
         const text = status === 'PAID' ? 'Plătit' : status === 'OVERDUE' ? 'Întârziat' : 'Pending';
         const icon = status === 'OVERDUE' ? <AlertCircle className="h-3 w-3" /> : null;
         

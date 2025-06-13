@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { Payment } from '@/types';
 import { CreditCard, Calendar, Hash, DollarSign, TrendingUp } from 'lucide-react';
+import { getPayments } from '@/services/paymentService';
 
 export function MyPaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -20,7 +23,7 @@ export function MyPaymentsPage() {
     try {
       // For demo purposes, using apartment ID 1
       const apartmentId = '1';
-      const data = await apiService.getPayments(apartmentId);
+      const data = await getPayments(apartmentId);
       setPayments(data);
     } catch (error) {
       toast({
