@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { Apartment, MeterReading } from '@/types';
 import { Home, Layers, Square, Building2, Gauge, Calendar } from 'lucide-react';
+import { getApartment } from '@/services/apartmentService';
+import { getMeterReadings } from '@/services/meterReadingService';
 
 export function MyApartmentPage() {
   const [apartment, setApartment] = useState<Apartment | null>(null);
@@ -22,8 +24,8 @@ export function MyApartmentPage() {
       const apartmentId = '1';
       
       const [apartmentData, readingsData] = await Promise.all([
-        apiService.getApartment(apartmentId),
-        apiService.getMeterReadings(apartmentId),
+        getApartment(apartmentId),
+        getMeterReadings(apartmentId),
       ]);
 
       setApartment(apartmentData);

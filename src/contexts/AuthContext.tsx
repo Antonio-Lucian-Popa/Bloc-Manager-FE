@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/types';
-import { apiService } from '@/services/api';
+import { getCurrentUser } from '@/services/authService';
+
+
 
 interface AuthContextType {
   user: User | null;
@@ -23,7 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem('authToken');
     if (token) {
       try {
-        const userData = await apiService.getCurrentUser();
+        const userData = await getCurrentUser();
         setUser(userData);
       } catch (error) {
         localStorage.removeItem('authToken');
@@ -31,15 +33,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     setLoading(false);
   };
-
   const login = async (email: string, password: string) => {
-    try {
-      const response = await apiService.login(email, password);
-      localStorage.setItem('authToken', response.token);
-      setUser(response.user);
-    } catch (error) {
-      throw error;
-    }
+    const response = await login(email, password);
+    localStorage.setItem('authToken', response.token);
+    setUser(response.user);
   };
 
   const logout = () => {

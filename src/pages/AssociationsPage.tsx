@@ -3,11 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { Association } from '@/types';
 import { CreateAssociationModal } from '@/components/modals/CreateAssociationModal';
 import { Plus, Building2, MapPin, Phone, Mail } from 'lucide-react';
+import { getAssociations } from '@/services/associationService';
 
 export function AssociationsPage() {
   const [associations, setAssociations] = useState<Association[]>([]);
@@ -21,7 +22,7 @@ export function AssociationsPage() {
 
   const loadAssociations = async () => {
     try {
-      const data = await apiService.getAssociations();
+      const data = await getAssociations();
       setAssociations(data);
     } catch (error) {
       toast({

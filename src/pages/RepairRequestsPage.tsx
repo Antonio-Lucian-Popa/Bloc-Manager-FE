@@ -3,12 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { RepairRequest } from '@/types';
 import { CreateRepairRequestModal } from '@/components/modals/CreateRepairRequestModal';
 import { Plus, Wrench, MapPin, Calendar, User, AlertTriangle } from 'lucide-react';
+import { getRepairRequests } from '@/services/repairRequestService';
 
 export function RepairRequestsPage() {
   const [repairRequests, setRepairRequests] = useState<RepairRequest[]>([]);
@@ -25,7 +26,7 @@ export function RepairRequestsPage() {
 
   const loadRepairRequests = async () => {
     try {
-      const data = await apiService.getRepairRequests();
+      const data = await getRepairRequests();
       setRepairRequests(data);
     } catch (error) {
       toast({

@@ -3,11 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { Expense } from '@/types';
 import { CreateExpenseModal } from '@/components/modals/CreateExpenseModal';
 import { Plus, Receipt, DollarSign, Calendar, Tag } from 'lucide-react';
+import { getExpenses } from '@/services/expenseService';
 
 export function ExpensesPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -21,7 +22,7 @@ export function ExpensesPage() {
 
   const loadExpenses = async () => {
     try {
-      const data = await apiService.getExpenses();
+      const data = await getExpenses();
       setExpenses(data);
     } catch (error) {
       toast({

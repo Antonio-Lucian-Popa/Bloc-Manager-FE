@@ -3,12 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Announcement } from '@/types';
 import { CreateAnnouncementModal } from '@/components/modals/CreateAnnouncementModal';
 import { Plus, MessageSquare, Calendar, User, AlertTriangle } from 'lucide-react';
+import { getAnnouncements } from '@/services/announcementService';
 
 export function AnnouncementsPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
@@ -25,7 +26,7 @@ export function AnnouncementsPage() {
 
   const loadAnnouncements = async () => {
     try {
-      const data = await apiService.getAnnouncements();
+      const data = await getAnnouncements();
       setAnnouncements(data);
     } catch (error) {
       toast({

@@ -3,11 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { Block } from '@/types';
 import { CreateBlockModal } from '@/components/modals/CreateBlockModal';
 import { Plus, Home, Building2, MapPin } from 'lucide-react';
+import { getBlocks } from '@/services/blocService';
 
 export function BlocksPage() {
   const [blocks, setBlocks] = useState<Block[]>([]);
@@ -21,7 +22,7 @@ export function BlocksPage() {
 
   const loadBlocks = async () => {
     try {
-      const data = await apiService.getBlocks();
+      const data = await getBlocks();
       setBlocks(data);
     } catch (error) {
       toast({

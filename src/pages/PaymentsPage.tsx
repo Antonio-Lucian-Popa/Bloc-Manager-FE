@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { Payment } from '@/types';
 import { CreditCard, Calendar, Hash, DollarSign } from 'lucide-react';
+import { getPayments } from '@/services/paymentService';
 
 export function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -18,7 +19,7 @@ export function PaymentsPage() {
 
   const loadPayments = async () => {
     try {
-      const data = await apiService.getPayments();
+      const data = await getPayments();
       setPayments(data);
     } catch (error) {
       toast({

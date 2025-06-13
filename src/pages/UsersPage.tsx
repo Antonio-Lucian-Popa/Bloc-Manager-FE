@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { User } from '@/types';
 import { InviteUserModal } from '@/components/modals/InviteUserModal';
 import { Plus, User as UserIcon, Mail, Calendar } from 'lucide-react';
+import { getUsers } from '@/services/userService';
 
 export function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -22,7 +23,7 @@ export function UsersPage() {
 
   const loadUsers = async () => {
     try {
-      const data = await apiService.getUsers();
+      const data = await getUsers();
       setUsers(data);
     } catch (error) {
       toast({

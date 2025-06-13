@@ -3,11 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { Apartment } from '@/types';
 import { CreateApartmentModal } from '@/components/modals/CreateApartmentModal';
 import { Plus, Home, User, Layers, Square } from 'lucide-react';
+import { getApartments } from '@/services/apartmentService';
 
 export function ApartmentsPage() {
   const [apartments, setApartments] = useState<Apartment[]>([]);
@@ -21,7 +22,7 @@ export function ApartmentsPage() {
 
   const loadApartments = async () => {
     try {
-      const data = await apiService.getApartments();
+      const data = await getApartments();
       setApartments(data);
     } catch (error) {
       toast({

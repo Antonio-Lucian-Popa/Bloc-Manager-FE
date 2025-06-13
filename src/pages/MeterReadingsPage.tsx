@@ -3,12 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { MeterReading } from '@/types';
 import { CreateMeterReadingModal } from '@/components/modals/CreateMeterReadingModal';
 import { Plus, Gauge, Home, Calendar, TrendingUp } from 'lucide-react';
+import { getMeterReadings } from '@/services/meterReadingService';
 
 export function MeterReadingsPage() {
   const [meterReadings, setMeterReadings] = useState<MeterReading[]>([]);
@@ -25,7 +26,7 @@ export function MeterReadingsPage() {
 
   const loadMeterReadings = async () => {
     try {
-      const data = await apiService.getMeterReadings();
+      const data = await getMeterReadings();
       setMeterReadings(data);
     } catch (error) {
       toast({
