@@ -13,6 +13,8 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Eye, EyeOff, User, Mail, Lock, UserCheck } from 'lucide-react';
+import { register } from '@/services/authService';
+import { UserRole } from '@/types';
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void;
@@ -127,7 +129,13 @@ export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
     setLoading(true);
     try {
       // Simulăm înregistrarea - în realitate ar trebui să facem un API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await register({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role as UserRole,
+      });
       
       toast({
         title: 'Înregistrare reușită!',

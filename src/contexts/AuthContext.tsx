@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/types';
 import { getCurrentUser } from '@/services/authService';
-
+import { login } from '@/services/authService';
 
 
 interface AuthContextType {

@@ -4,7 +4,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  role: 'ADMIN_ASSOCIATION' | 'BLOCK_ADMIN' | 'LOCATAR';
+  role: UserRole;
   createdAt: string;
 }
 
