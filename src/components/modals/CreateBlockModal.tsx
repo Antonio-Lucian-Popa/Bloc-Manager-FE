@@ -18,10 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { Association } from '@/types';
 import { Loader2 } from 'lucide-react';
+import { getAssociations } from '@/services/associationService';
+import { createBlock } from '@/services/blocService';
 
 interface CreateBlockModalProps {
   open: boolean;
@@ -51,8 +52,8 @@ export function CreateBlockModal({
 
   const loadAssociations = async () => {
     try {
-      const data = await apiService.getAssociations();
-      setAssociations(data);
+      const data = await getAssociations();
+      setAssociations(data as Association[]);
     } catch (error) {
       toast({
         title: 'Eroare',
@@ -75,9 +76,10 @@ export function CreateBlockModal({
 
     setLoading(true);
     try {
-      await apiService.createBlock(formData.associationId, {
+      await createBlock(formData.associationId, {
         name: formData.name,
         address: formData.address,
+        associationId: formData.associationId
       });
       
       toast({

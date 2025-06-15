@@ -17,10 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { Block } from '@/types';
 import { Loader2 } from 'lucide-react';
+import { getBlocks } from '@/services/blocService';
+import { createApartment } from '@/services/apartmentService';
 
 interface CreateApartmentModalProps {
   open: boolean;
@@ -51,7 +52,7 @@ export function CreateApartmentModal({
 
   const loadBlocks = async () => {
     try {
-      const data = await apiService.getBlocks();
+      const data = await getBlocks();
       setBlocks(data);
     } catch (error) {
       toast({
@@ -75,10 +76,11 @@ export function CreateApartmentModal({
 
     setLoading(true);
     try {
-      await apiService.createApartment(formData.blockId, {
+      await createApartment(formData.blockId, {
         number: formData.number,
         floor: parseInt(formData.floor),
         area: parseFloat(formData.area),
+        blockId: formData.blockId
       });
       
       toast({

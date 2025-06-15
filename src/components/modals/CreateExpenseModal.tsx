@@ -18,10 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { Block } from '@/types';
 import { Loader2 } from 'lucide-react';
+import { getBlocks } from '@/services/blocService';
+import { createExpense } from '@/services/expenseService';
 
 interface CreateExpenseModalProps {
   open: boolean;
@@ -63,7 +64,7 @@ export function CreateExpenseModal({
 
   const loadBlocks = async () => {
     try {
-      const data = await apiService.getBlocks();
+      const data = await getBlocks();
       setBlocks(data);
     } catch (error) {
       toast({
@@ -87,7 +88,7 @@ export function CreateExpenseModal({
 
     setLoading(true);
     try {
-      await apiService.createExpense({
+      await createExpense({
         description: formData.description,
         amount: parseFloat(formData.amount),
         category: formData.category,

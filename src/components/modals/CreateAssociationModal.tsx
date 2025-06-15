@@ -11,9 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { createAssociation } from '@/services/associationService';
 
 interface CreateAssociationModalProps {
   open: boolean;
@@ -48,7 +48,7 @@ export function CreateAssociationModal({
 
     setLoading(true);
     try {
-      await apiService.createAssociation(formData);
+      await createAssociation(formData);
       toast({
         title: 'Success',
         description: 'Asociația a fost creată cu succes.',

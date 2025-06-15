@@ -1,3 +1,4 @@
+
 export interface User {
   id: string;
   email: string;
@@ -114,4 +115,16 @@ export interface DashboardStats {
   pendingRepairs?: number;
   totalRevenue?: number;
   occupancyRate?: number;
+}
+
+export enum UserRole {
+  ADMIN_ASSOCIATION = 'ADMIN_ASSOCIATION',
+  BLOCK_ADMIN = 'BLOCK_ADMIN',
+  LOCATAR = 'LOCATAR',
+}
+
+export enum PaymentMethod {
+  CASH = 'CASH',
+  CARD = 'CARD',
+  TRANSFER = 'TRANSFER',
 }

@@ -18,9 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { createRepairRequest } from '@/services/repairRequestService';
 
 interface CreateRepairRequestModalProps {
   open: boolean;
@@ -61,10 +62,12 @@ export function CreateRepairRequestModal({
     setLoading(true);
     try {
       // For demo purposes, using hardcoded IDs
-      await apiService.createRepairRequest({
+      await createRepairRequest({
         ...formData,
+        priority: formData.priority as 'LOW' | 'MEDIUM' | 'HIGH',
         apartmentId: '1', // This would come from the current user's apartment
-        blockId: '1',     // This would come from the current user's block
+        blockId: '1',
+        status: 'PENDING'
       });
       
       toast({

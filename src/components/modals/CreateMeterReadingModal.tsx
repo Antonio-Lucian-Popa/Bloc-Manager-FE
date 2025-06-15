@@ -17,10 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { Apartment } from '@/types';
 import { Loader2 } from 'lucide-react';
+import { getApartments } from '@/services/apartmentService';
+import { createMeterReading } from '@/services/meterReadingService';
 
 interface CreateMeterReadingModalProps {
   open: boolean;
@@ -59,7 +60,7 @@ export function CreateMeterReadingModal({
 
   const loadApartments = async () => {
     try {
-      const data = await apiService.getApartments();
+      const data = await getApartments();
       setApartments(data);
     } catch (error) {
       toast({
@@ -83,7 +84,7 @@ export function CreateMeterReadingModal({
 
     setLoading(true);
     try {
-      await apiService.createMeterReading({
+      await createMeterReading({
         apartmentId: formData.apartmentId,
         meterType: formData.meterType,
         currentReading: parseFloat(formData.currentReading),

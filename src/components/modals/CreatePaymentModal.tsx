@@ -18,10 +18,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { ApartmentExpense } from '@/types';
 import { Loader2 } from 'lucide-react';
+import { createPayment } from '@/services/paymentService';
 
 interface CreatePaymentModalProps {
   open: boolean;
@@ -37,7 +38,12 @@ export function CreatePaymentModal({
   pendingExpenses,
 }: CreatePaymentModalProps) {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    expenseId: string;
+    amount: string;
+    method: 'CARD' | 'TRANSFER' | 'CASH';
+    reference: string;
+  }>({
     expenseId: '',
     amount: '',
     method: 'CARD',
@@ -75,13 +81,12 @@ export function CreatePaymentModal({
 
     setLoading(true);
     try {
-      await apiService.createPayment({
+      await createPayment({
         apartmentId: '1', // This would come from the current user's apartment
         expenseId: formData.expenseId,
         amount: parseFloat(formData.amount),
         method: formData.method,
         reference: formData.reference,
-        paymentDate: new Date().toISOString(),
       });
       
       toast({
@@ -181,7 +186,7 @@ export function CreatePaymentModal({
               <Select
                 value={formData.method}
                 onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, method: value }))
+                  setFormData((prev) => ({ ...prev, method: value as 'CARD' | 'TRANSFER' | 'CASH' }))
                 }
                 disabled={loading}
               >

@@ -17,9 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { apiService } from '@/services/api';
+
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { inviteUser } from '@/services/userService';
+import { UserRole } from '@/types';
 
 interface InviteUserModalProps {
   open: boolean;
@@ -33,18 +35,23 @@ export function InviteUserModal({
   onSuccess,
 }: InviteUserModalProps) {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: UserRole;
+  }>({
     email: '',
     firstName: '',
     lastName: '',
-    role: '',
+    role: UserRole.ADMIN_ASSOCIATION,
   });
   const { toast } = useToast();
 
   const roles = [
-    { value: 'ADMIN_ASSOCIATION', label: 'Admin Asociație' },
-    { value: 'BLOCK_ADMIN', label: 'Admin Bloc' },
-    { value: 'LOCATAR', label: 'Locatar' },
+    { value: UserRole.ADMIN_ASSOCIATION, label: 'Admin Asociație' },
+    { value: UserRole.BLOCK_ADMIN, label: 'Admin Bloc' },
+    { value: UserRole.LOCATAR, label: 'Locatar' },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,14 +67,14 @@ export function InviteUserModal({
 
     setLoading(true);
     try {
-      await apiService.inviteUser(formData);
+      await inviteUser(formData);
       toast({
         title: 'Success',
         description: 'Invitația a fost trimisă cu succes.',
       });
       onSuccess();
       onClose();
-      setFormData({ email: '', firstName: '', lastName: '', role: '' });
+      setFormData({ email: '', firstName: '', lastName: '', role: UserRole.ADMIN_ASSOCIATION });
     } catch (error) {
       toast({
         title: 'Eroare',
@@ -137,7 +144,7 @@ export function InviteUserModal({
             <Select
               value={formData.role}
               onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, role: value }))
+                setFormData((prev) => ({ ...prev, role: value as UserRole }))
               }
               disabled={loading}
             >

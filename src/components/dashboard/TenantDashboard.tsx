@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { DashboardCard } from './DashboardCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Home, 
@@ -19,6 +19,11 @@ import {
 import { Apartment, ApartmentExpense, Payment, Announcement, RepairRequest } from '@/types';
 import { CreateRepairRequestModal } from '@/components/modals/CreateRepairRequestModal';
 import { CreatePaymentModal } from '@/components/modals/CreatePaymentModal';
+import { getApartment } from '@/services/apartmentService';
+import { getApartmentExpenses } from '@/services/expenseService';
+import { getPayments } from '@/services/paymentService';
+import { getAnnouncements } from '@/services/announcementService';
+import { getRepairRequests } from '@/services/repairRequestService';
 
 export function TenantDashboard() {
   const [apartment, setApartment] = useState<Apartment | null>(null);
@@ -41,11 +46,11 @@ export function TenantDashboard() {
       const apartmentId = '1';
       
       const [apartmentData, expensesData, paymentsData, announcementsData, repairsData] = await Promise.all([
-        apiService.getApartment(apartmentId),
-        apiService.getApartmentExpenses(apartmentId),
-        apiService.getPayments(apartmentId),
-        apiService.getAnnouncements(),
-        apiService.getRepairRequests(undefined, apartmentId),
+        getApartment(apartmentId),
+        getApartmentExpenses(apartmentId),
+        getPayments(apartmentId),
+        getAnnouncements(),
+        getRepairRequests(undefined, apartmentId),
       ]);
 
       setApartment(apartmentData);
@@ -84,7 +89,7 @@ export function TenantDashboard() {
       header: 'Status',
       cell: ({ row }: any) => {
         const status = row.original.status;
-        const variant = status === 'PAID' ? 'success' : status === 'OVERDUE' ? 'destructive' : 'secondary';
+        const variant = status === 'PAID' ? 'default' : status === 'OVERDUE' ? 'destructive' : 'secondary';
         const text = status === 'PAID' ? 'Plătit' : status === 'OVERDUE' ? 'Întârziat' : 'Pending';
         return <Badge variant={variant}>{text}</Badge>;
       },
@@ -156,7 +161,7 @@ export function TenantDashboard() {
       header: 'Status',
       cell: ({ row }: any) => {
         const status = row.original.status;
-        const variant = status === 'COMPLETED' ? 'success' : 
+        const variant = status === 'COMPLETED' ? 'default' : 
                       status === 'IN_PROGRESS' ? 'secondary' : 
                       status === 'REJECTED' ? 'destructive' : 'outline';
         return <Badge variant={variant}>{status}</Badge>;

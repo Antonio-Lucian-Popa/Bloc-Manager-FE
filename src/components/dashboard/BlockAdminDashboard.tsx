@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { DashboardCard } from './DashboardCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Home, 
@@ -21,6 +21,10 @@ import { CreateApartmentModal } from '@/components/modals/CreateApartmentModal';
 import { CreateExpenseModal } from '@/components/modals/CreateExpenseModal';
 import { CreateAnnouncementModal } from '@/components/modals/CreateAnnouncementModal';
 import { CreateMeterReadingModal } from '@/components/modals/CreateMeterReadingModal';
+import { getDashboardStats } from '@/services/dashboardService';
+import { getExpenses } from '@/services/expenseService';
+import { getRepairRequests } from '@/services/repairRequestService';
+import { getApartments } from '@/services/apartmentService';
 
 export function BlockAdminDashboard() {
   const [stats, setStats] = useState<DashboardStats>({});
@@ -41,10 +45,10 @@ export function BlockAdminDashboard() {
   const loadDashboardData = async () => {
     try {
       const [statsData, apartmentsData, expensesData, repairsData] = await Promise.all([
-        apiService.getDashboardStats(),
-        apiService.getApartments(),
-        apiService.getExpenses(),
-        apiService.getRepairRequests(),
+        getDashboardStats(),
+        getApartments(),
+        getExpenses(),
+        getRepairRequests(),
       ]);
 
       setStats(statsData);
@@ -101,7 +105,7 @@ export function BlockAdminDashboard() {
       header: 'Status',
       cell: ({ row }: any) => {
         const status = row.original.status;
-        const variant = status === 'PAID' ? 'success' : status === 'OVERDUE' ? 'destructive' : 'secondary';
+        const variant = status === 'PAID' ? 'default' : status === 'OVERDUE' ? 'destructive' : 'secondary';
         return <Badge variant={variant}>{status}</Badge>;
       },
     },

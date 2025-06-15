@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { DashboardCard } from './DashboardCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Building2, 
@@ -18,6 +18,9 @@ import { Association, Block, DashboardStats } from '@/types';
 import { CreateAssociationModal } from '@/components/modals/CreateAssociationModal';
 import { CreateBlockModal } from '@/components/modals/CreateBlockModal';
 import { InviteUserModal } from '@/components/modals/InviteUserModal';
+import { getDashboardStats } from '@/services/dashboardService';
+import { getAssociations } from '@/services/associationService';
+import { getBlocks } from '@/services/blocService';
 
 export function AdminAssociationDashboard() {
   const [stats, setStats] = useState<DashboardStats>({});
@@ -36,13 +39,13 @@ export function AdminAssociationDashboard() {
   const loadDashboardData = async () => {
     try {
       const [statsData, associationsData, blocksData] = await Promise.all([
-        apiService.getDashboardStats(),
-        apiService.getAssociations(),
-        apiService.getBlocks(),
+        getDashboardStats(),
+        getAssociations(),
+        getBlocks(),
       ]);
 
       setStats(statsData);
-      setAssociations(associationsData);
+      setAssociations(associationsData as Association[]);
       setRecentBlocks(blocksData.slice(0, 5));
     } catch (error) {
       toast({
