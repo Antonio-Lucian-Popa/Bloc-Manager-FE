@@ -21,7 +21,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { inviteUser } from '@/services/userService';
-import { UserRole } from '@/types';
+import { Role, UserRole } from '@/types';
 
 interface InviteUserModalProps {
   open: boolean;
@@ -39,19 +39,19 @@ export function InviteUserModal({
     email: string;
     firstName: string;
     lastName: string;
-    role: UserRole;
+    role: Role;
   }>({
     email: '',
     firstName: '',
     lastName: '',
-    role: UserRole.ADMIN_ASSOCIATION,
+    role: Role.ADMIN_ASSOCIATION,
   });
   const { toast } = useToast();
 
   const roles = [
-    { value: UserRole.ADMIN_ASSOCIATION, label: 'Admin Asociație' },
-    { value: UserRole.BLOCK_ADMIN, label: 'Admin Bloc' },
-    { value: UserRole.LOCATAR, label: 'Locatar' },
+    { value: Role.ADMIN_ASSOCIATION, label: 'Admin Asociație' },
+    { value: Role.BLOCK_ADMIN, label: 'Admin Bloc' },
+    { value: Role.LOCATAR, label: 'Locatar' },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,7 +74,7 @@ export function InviteUserModal({
       });
       onSuccess();
       onClose();
-      setFormData({ email: '', firstName: '', lastName: '', role: UserRole.ADMIN_ASSOCIATION });
+      setFormData({ email: '', firstName: '', lastName: '', role: Role.ADMIN_ASSOCIATION });
     } catch (error) {
       toast({
         title: 'Eroare',
@@ -144,7 +144,7 @@ export function InviteUserModal({
             <Select
               value={formData.role}
               onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, role: value as UserRole }))
+                setFormData((prev) => ({ ...prev, role: value as Role }))
               }
               disabled={loading}
             >

@@ -17,6 +17,14 @@ export interface UserRole {
   createdAt: string;
 }
 
+export interface CreateAssociations {
+  name: string;
+  cif: string;
+  address: string;
+  phone: string;
+  email: string;
+}
+
 export interface Association {
   id: string;
   name: string;

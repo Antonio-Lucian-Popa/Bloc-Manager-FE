@@ -32,6 +32,7 @@ export function CreateAssociationModal({
     address: '',
     phone: '',
     email: '',
+    cif: ''
   });
   const { toast } = useToast();
 
@@ -55,7 +56,7 @@ export function CreateAssociationModal({
       });
       onSuccess();
       onClose();
-      setFormData({ name: '', address: '', phone: '', email: '' });
+      setFormData({ name: '', address: '', phone: '', email: '', cif: '' });
     } catch (error) {
       toast({
         title: 'Eroare',
@@ -129,6 +130,20 @@ export function CreateAssociationModal({
                   setFormData((prev) => ({ ...prev, email: e.target.value }))
                 }
                 placeholder="contact@asociatia.ro"
+                disabled={loading}
+              />
+            </div>
+
+             <div className="space-y-2">
+              <Label htmlFor="cif">CIF *</Label>
+              <Input
+                id="cif"
+                type="text"
+                value={formData.cif}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, cif: e.target.value }))
+                }
+                placeholder="Codul de identificare fiscală"
                 disabled={loading}
               />
             </div>

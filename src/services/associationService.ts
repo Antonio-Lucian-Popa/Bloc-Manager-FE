@@ -1,5 +1,6 @@
 // services/associationService.ts
 
+import { CreateAssociations } from "@/types";
 import api from "./api";
 
 
@@ -8,7 +9,7 @@ export const getAssociations = async () => {
   return res.data;
 };
 
-export const createAssociation = async (data: any) => {
+export const createAssociation = async (data: CreateAssociations) => {
   const res = await api.post('/associations', data);
   return res.data;
 };

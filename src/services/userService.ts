@@ -1,10 +1,10 @@
 // services/userService.ts
 import api from './api';
-import { User } from '@/types';
+import { Role, User } from '@/types';
 
 export const inviteUser = async (data: {
   email: string;
-  role: User['role'];
+  role: Role;
   blockId?: string;
   associationId?: string;
 }): Promise<void> => {
