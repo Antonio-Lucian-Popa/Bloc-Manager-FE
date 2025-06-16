@@ -5,7 +5,7 @@ import api from "./api";
 
 
 export const getAssociations = async () => {
-  const res = await api.get('/associations');
+  const res = await api.get('/associations/my');
   return res.data;
 };
 
