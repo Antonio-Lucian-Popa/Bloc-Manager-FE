@@ -9,7 +9,7 @@ export function DashboardPage() {
 
   if (!user) return null;
 
-  switch (user.role) {
+  switch (user.role.role) {
     case 'ADMIN_ASSOCIATION':
       return <AdminAssociationDashboard />;
     case 'BLOCK_ADMIN':

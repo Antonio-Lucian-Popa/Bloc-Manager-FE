@@ -8,6 +8,15 @@ export interface User {
   createdAt: string;
 }
 
+export interface UserRole {
+  id: string;
+  userId: string;
+  associationId?: string;
+  blockId?: string;
+  role: Role;
+  createdAt: string;
+}
+
 export interface Association {
   id: string;
   name: string;
@@ -117,7 +126,7 @@ export interface DashboardStats {
   occupancyRate?: number;
 }
 
-export enum UserRole {
+export enum Role {
   ADMIN_ASSOCIATION = 'ADMIN_ASSOCIATION',
   BLOCK_ADMIN = 'BLOCK_ADMIN',
   LOCATAR = 'LOCATAR',
