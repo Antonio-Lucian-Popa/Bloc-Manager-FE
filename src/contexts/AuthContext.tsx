@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/types';
 import { getCurrentUser } from '@/services/authService';
-import { login } from '@/services/authService';
+import { login as loginService } from '@/services/authService';
 
 
 interface AuthContextType {
@@ -22,25 +22,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const initializeAuth = async () => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('access_token');
     if (token) {
       try {
         const userData = await getCurrentUser();
         setUser(userData);
       } catch (error) {
-        localStorage.removeItem('authToken');
+        localStorage.removeItem('access_token');
       }
     }
     setLoading(false);
   };
   const login = async (email: string, password: string) => {
-    const response = await login(email, password);
-    localStorage.setItem('authToken', response.token);
-    setUser(response.user);
+    const response = await loginService(email, password);
+    localStorage.setItem('access_token', response.accessToken);
+    //setUser(response.user);
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('access_token');
     setUser(null);
   };
 
