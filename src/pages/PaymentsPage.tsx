@@ -7,30 +7,57 @@ import { useToast } from '@/hooks/use-toast';
 import { Payment } from '@/types';
 import { CreditCard, Calendar, Hash, DollarSign } from 'lucide-react';
 import { getPayments } from '@/services/paymentService';
+import { getAssociations } from '@/services/associationService';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useEffectOnce } from 'react-use';
+
 
 export function PaymentsPage() {
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
+  const [associationId, setAssociationId] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadPayments();
-  }, []);
-
-  const loadPayments = async () => {
+  const loadData = async () => {
     try {
-      const data = await getPayments();
-      setPayments(data);
-    } catch (error) {
+      if (!associationId) return;
+
+      const res = await getPayments({
+        page,
+        size: pageSize,
+        search: debouncedSearch,
+        associationId,
+      });
+
+      setPayments(res.content);
+      setTotal(res.totalElements);
+    } catch (err) {
       toast({
         title: 'Eroare',
         description: 'Nu s-au putut încărca plățile.',
         variant: 'destructive',
       });
-    } finally {
-      setLoading(false);
     }
   };
+
+  // Fetch initial associationId once
+  useEffectOnce(() => {
+    getAssociations().then((res) => {
+      if (res.content.length > 0) {
+        setAssociationId(res.content[0].id);
+      }
+    });
+  });
+
+  useEffect(() => {
+    if (associationId) {
+      loadData();
+    }
+  }, [page, pageSize, debouncedSearch, associationId]);
 
   const columns = [
     {
@@ -71,12 +98,15 @@ export function PaymentsPage() {
     {
       accessorKey: 'reference',
       header: 'Referință',
-      cell: ({ row }: any) => row.original.reference ? (
-        <div className="flex items-center space-x-2">
-          <Hash className="h-4 w-4 text-gray-400" />
-          <span className="font-mono text-sm">{row.original.reference}</span>
-        </div>
-      ) : '-',
+      cell: ({ row }: any) =>
+        row.original.reference ? (
+          <div className="flex items-center space-x-2">
+            <Hash className="h-4 w-4 text-gray-400" />
+            <span className="font-mono text-sm">{row.original.reference}</span>
+          </div>
+        ) : (
+          '-'
+        ),
     },
     {
       accessorKey: 'apartmentNumber',
@@ -87,39 +117,32 @@ export function PaymentsPage() {
     },
   ];
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="h-8 bg-gray-200 animate-pulse rounded" />
-        <div className="h-64 bg-gray-200 animate-pulse rounded" />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Plăți</h1>
-          <p className="text-gray-600 mt-1">
-            Vizualizați toate plățile efectuate
-          </p>
+          <p className="text-gray-600 mt-1">Vizualizați toate plățile efectuate</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle>Istoricul Plăților</CardTitle>
-          <CardDescription>
-            Toate plățile înregistrate în sistem
-          </CardDescription>
+          <CardDescription>Toate plățile înregistrate în sistem</CardDescription>
         </CardHeader>
         <CardContent>
           <DataTable
             columns={columns}
             data={payments}
+            total={total}
+            page={page}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+            onSearchChange={setSearch}
             searchKey="reference"
-            searchPlaceholder="Căutați după referința plății..."
+            searchPlaceholder="Căutați după referință, metodă sau sumă..."
           />
         </CardContent>
       </Card>
