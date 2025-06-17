@@ -5,10 +5,9 @@ import { Role, User } from '@/types';
 export const inviteUser = async (data: {
   email: string;
   role: Role;
-  blockId?: string;
-  associationId?: string;
-}): Promise<void> => {
-  await api.post('/user-roles/invite', data);
+  blockId: string | null;
+}, associationId: string): Promise<void> => {
+  await api.post(`/associations/${associationId}/invite`, data);
 };
 
 export const getUsers = async (): Promise<User[]> => {

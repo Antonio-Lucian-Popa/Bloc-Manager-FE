@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { inviteUser } from '@/services/userService';
 import { Role, UserRole } from '@/types';
+import { getBlocks } from '@/services/blocService';
+import { getAssociations } from '@/services/associationService';
 
 interface InviteUserModalProps {
   open: boolean;
@@ -37,14 +40,12 @@ export function InviteUserModal({
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<{
     email: string;
-    firstName: string;
-    lastName: string;
     role: Role;
+    blockId: string | null;
   }>({
     email: '',
-    firstName: '',
-    lastName: '',
     role: Role.ADMIN_ASSOCIATION,
+    blockId: '',
   });
   const { toast } = useToast();
 
@@ -54,9 +55,41 @@ export function InviteUserModal({
     { value: Role.LOCATAR, label: 'Locatar' },
   ];
 
+  const [blocks, setBlocks] = useState<{ value: string; label: string }[]>([]);
+  const [associationId, setAssociationId] = useState<string>('');
+
+
+   useEffect(() => {
+  if (!open) return;
+
+  const fetchBlocks = async () => {
+    try {
+      const associations = await getAssociations();
+      if (associations.length === 0) return;
+
+      setAssociationId(associations[0].id);
+      const data = await getBlocks(associations[0].id);
+      const formatted = data.map((b: any) => ({
+        value: b.id,
+        label: b.name,
+      }));
+      setBlocks(formatted);
+    } catch (error) {
+      toast({
+        title: 'Eroare',
+        description: 'Nu s-au putut încărca blocurile.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  fetchBlocks();
+}, [open]);
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.email || !formData.firstName || !formData.lastName || !formData.role) {
+    if (!formData.email || !formData.role) {
       toast({
         title: 'Eroare',
         description: 'Toate câmpurile sunt obligatorii.',
@@ -67,14 +100,17 @@ export function InviteUserModal({
 
     setLoading(true);
     try {
-      await inviteUser(formData);
+      if(!formData.blockId) {
+        formData.blockId = null;
+      }
+      await inviteUser(formData, associationId);
       toast({
         title: 'Success',
         description: 'Invitația a fost trimisă cu succes.',
       });
       onSuccess();
       onClose();
-      setFormData({ email: '', firstName: '', lastName: '', role: Role.ADMIN_ASSOCIATION });
+      setFormData({ email: '', role: Role.ADMIN_ASSOCIATION, blockId: '' });
     } catch (error) {
       toast({
         title: 'Eroare',
@@ -111,34 +147,6 @@ export function InviteUserModal({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">Prenume *</Label>
-              <Input
-                id="firstName"
-                value={formData.firstName}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, firstName: e.target.value }))
-                }
-                placeholder="Ion"
-                disabled={loading}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Nume *</Label>
-              <Input
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, lastName: e.target.value }))
-                }
-                placeholder="Popescu"
-                disabled={loading}
-              />
-            </div>
-          </div>
-
           <div className="space-y-2">
             <Label htmlFor="role">Rol *</Label>
             <Select
@@ -160,6 +168,29 @@ export function InviteUserModal({
               </SelectContent>
             </Select>
           </div>
+
+         <div className="space-y-2">
+            <Label htmlFor="bloc">Bloc</Label>
+            <Select
+              value={formData.blockId}
+              onValueChange={(value) =>
+                setFormData((prev) => ({ ...prev, blockId: value }))
+              }
+              disabled={loading || blocks.length === 0}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selectați blocul" />
+              </SelectTrigger>
+              <SelectContent>
+                {blocks.map((bloc) => (
+                  <SelectItem key={bloc.value} value={bloc.value}>
+                    {bloc.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
