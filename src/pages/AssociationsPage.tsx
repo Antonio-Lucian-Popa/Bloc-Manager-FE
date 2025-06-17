@@ -30,16 +30,17 @@ export function AssociationsPage() {
     }, 500);
 
     return () => clearTimeout(handler);
-  }, [debouncedSearch, page]);
+  }, [search]);
 
   useEffect(() => {
     loadAssociations();
-  }, []);
+  }, [debouncedSearch, page]);
 
   const loadAssociations = async () => {
     try {
-      const data = await getAssociations();
-      setAssociations(data);
+      const data = await getAssociations(page, pageSize, debouncedSearch);
+      setAssociations(data.content);
+      setTotal(data.totalElements);
     } catch (error) {
       toast({
         title: 'Eroare',
