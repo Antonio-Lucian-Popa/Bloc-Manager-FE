@@ -41,9 +41,9 @@ export function UsersPage() {
   const loadUsers = async () => {
     try {
       const associations = await getAssociations();
-      if (associations.length === 0) return;
+      if (associations.content.length === 0) return;
       const { content, totalElements } = await getUsers(
-        associations[0].id,
+        associations.content[0].id,
         page,
         pageSize,
         debouncedSearch
