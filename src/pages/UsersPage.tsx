@@ -18,16 +18,27 @@ export function UsersPage() {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const { toast } = useToast();
 
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [search, setSearch] = useState('');
+
   useEffect(() => {
     loadUsers();
-  }, []);
+  }, [page, pageSize, search]);
 
   const loadUsers = async () => {
     try {
-       const associations = await getAssociations();
+      const associations = await getAssociations();
       if (associations.length === 0) return;
-      const data = await getUsers(associations[0].id);
-      setUsers(data);
+      const { content, totalElements } = await getUsers(
+        associations[0].id,
+        page,
+        pageSize,
+        search
+      );
+      setUsers(content);
+      setTotal(totalElements);
     } catch (error) {
       toast({
         title: 'Eroare',
@@ -157,9 +168,16 @@ export function UsersPage() {
           <DataTable
             columns={columns}
             data={users}
+            total={total}
+            page={page}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={() => { }}
+            onSearchChange={setSearch}
             searchKey="email"
             searchPlaceholder="Căutați după email..."
           />
+
         </CardContent>
       </Card>
 
