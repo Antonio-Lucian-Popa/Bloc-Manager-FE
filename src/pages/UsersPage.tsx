@@ -22,10 +22,21 @@ export function UsersPage() {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (search !== debouncedSearch) {
+        setDebouncedSearch(search);
+      }
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [search]);
 
   useEffect(() => {
     loadUsers();
-  }, [page, pageSize, search]);
+  }, [page, pageSize, debouncedSearch]);
 
   const loadUsers = async () => {
     try {
@@ -35,7 +46,7 @@ export function UsersPage() {
         associations[0].id,
         page,
         pageSize,
-        search
+        debouncedSearch
       );
       setUsers(content);
       setTotal(totalElements);
@@ -172,7 +183,7 @@ export function UsersPage() {
             page={page}
             pageSize={pageSize}
             onPageChange={setPage}
-            onPageSizeChange={() => { }}
+            onPageSizeChange={setPageSize}
             onSearchChange={setSearch}
             searchKey="email"
             searchPlaceholder="Căutați după email..."
