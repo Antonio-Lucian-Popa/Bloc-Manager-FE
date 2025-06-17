@@ -17,6 +17,7 @@ import {
   X,
   Gauge,
 } from 'lucide-react';
+import { Role } from '@/types';
 
 interface SidebarProps {
   open: boolean;
@@ -37,8 +38,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       },
     ];
 
-    switch (user?.role) {
-      case 'ADMIN_ASSOCIATION':
+    switch (user?.role.role) {
+      case Role.ADMIN_ASSOCIATION:
         return [
           ...baseItems,
           {
@@ -68,7 +69,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           },
         ];
 
-      case 'BLOCK_ADMIN':
+      case Role.BLOCK_ADMIN:
         return [
           ...baseItems,
           {
@@ -103,7 +104,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           },
         ];
 
-      case 'LOCATAR':
+      case Role.LOCATAR:
         return [
           ...baseItems,
           {
