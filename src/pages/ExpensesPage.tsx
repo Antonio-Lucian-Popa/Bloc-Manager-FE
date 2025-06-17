@@ -92,7 +92,7 @@ export function ExpensesPage() {
       accessorKey: 'blockName',
       header: 'Blocul',
       cell: ({ row }: any) => (
-        <Badge variant="secondary">{row.original.blockName}</Badge>
+        <Badge variant="secondary">{row.original.bloc.name}</Badge>
       ),
     },
     {

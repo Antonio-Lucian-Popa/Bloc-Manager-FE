@@ -64,7 +64,6 @@ export interface Expense {
   amount: number;
   category: string;
   blockId: string;
-  blockName: string;
   dueDate: string;
   createdAt: string;
   status: 'PENDING' | 'PAID' | 'OVERDUE';

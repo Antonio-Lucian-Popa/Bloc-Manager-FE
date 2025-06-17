@@ -53,7 +53,7 @@ export function CreateBlockModal({
   const loadAssociations = async () => {
     try {
       const data = await getAssociations();
-      setAssociations(data as Association[]);
+      setAssociations(data.content);
     } catch (error) {
       toast({
         title: 'Eroare',
@@ -81,7 +81,7 @@ export function CreateBlockModal({
         address: formData.address,
         associationId: formData.associationId
       });
-      
+
       toast({
         title: 'Success',
         description: 'Blocul a fost creat cu succes.',
@@ -124,12 +124,19 @@ export function CreateBlockModal({
                 <SelectValue placeholder="Selectați asociația" />
               </SelectTrigger>
               <SelectContent>
-                {associations.map((association) => (
-                  <SelectItem key={association.id} value={association.id}>
-                    {association.name}
-                  </SelectItem>
-                ))}
+                {associations?.length ? (
+                  associations.map((association) => (
+                    <SelectItem key={association.id} value={association.id}>
+                      {association.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="p-2 text-sm text-muted-foreground">
+                    Nu există asociații disponibile
+                  </div>
+                )}
               </SelectContent>
+
             </Select>
           </div>
 
