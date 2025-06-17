@@ -2,10 +2,27 @@
 import api from './api';
 import { Block } from '@/types';
 
-export const getBlocks = async (associationId?: string): Promise<Block[]> => {
-  const res = await api.get<Block[]>(`/blocks/association/${associationId}`);
+interface BlockPage {
+  content: Block[];
+  totalElements: number;
+}
+
+export const getBlocks = async (
+  associationId: string,
+  page = 0,
+  size = 10,
+  search = ''
+): Promise<BlockPage> => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    search,
+  });
+
+  const res = await api.get<BlockPage>(`/blocks/association/${associationId}?${params.toString()}`);
   return res.data;
 };
+
 
 export const createBlock = async (
   associationId: string,

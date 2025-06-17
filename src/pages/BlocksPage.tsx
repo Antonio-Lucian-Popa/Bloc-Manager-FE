@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,24 +15,30 @@ import { getAssociations } from '@/services/associationService';
 
 export function BlocksPage() {
   const [blocks, setBlocks] = useState<Block[]>([]);
+  const [total, setTotal] = useState(0);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(0);
+  const pageSize = 10;
+
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     loadBlocks();
-  }, []);
+  }, [page, search]);
 
   const loadBlocks = async () => {
     try {
       const associations = await getAssociations();
-      const data = await getBlocks(associations[0].id);
-      setBlocks(data);
+      const data = await getBlocks(associations[0].id, page, pageSize, search);
+      setBlocks(data.content);
+      setTotal(data.totalElements);
     } catch (error) {
       toast({
         title: 'Eroare',
         description: 'Nu s-au putut încărca blocurile.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setLoading(false);
@@ -46,7 +54,7 @@ export function BlocksPage() {
           <Home className="h-4 w-4 text-green-600" />
           <span className="font-medium">{row.original.name}</span>
         </div>
-      ),
+      )
     },
     {
       accessorKey: 'associationName',
@@ -56,7 +64,7 @@ export function BlocksPage() {
           <Building2 className="h-4 w-4 text-blue-600" />
           <span>{row.original.associationName}</span>
         </div>
-      ),
+      )
     },
     {
       accessorKey: 'address',
@@ -66,7 +74,7 @@ export function BlocksPage() {
           <MapPin className="h-4 w-4 text-gray-400" />
           <span>{row.original.address}</span>
         </div>
-      ),
+      )
     },
     {
       accessorKey: 'apartmentsCount',
@@ -75,13 +83,14 @@ export function BlocksPage() {
         <Badge variant="outline">
           {row.original.apartmentsCount || 0} apartamente
         </Badge>
-      ),
+      )
     },
     {
       accessorKey: 'createdAt',
       header: 'Data Creării',
-      cell: ({ row }: any) => new Date(row.original.createdAt).toLocaleDateString('ro-RO'),
-    },
+      cell: ({ row }: any) =>
+        new Date(row.original.createdAt).toLocaleDateString('ro-RO')
+    }
   ];
 
   if (loading) {
@@ -119,6 +128,15 @@ export function BlocksPage() {
           <DataTable
             columns={columns}
             data={blocks}
+            total={total}
+            page={page}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={() => {}}
+            onSearchChange={(value) => {
+              setSearch(value);
+              setPage(0); // resetăm pagina la 0 pe căutare nouă
+            }}
             searchKey="name"
             searchPlaceholder="Căutați după numele blocului..."
           />
