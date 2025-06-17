@@ -47,14 +47,34 @@ export function CreateExpenseModal({
   });
   const { toast } = useToast();
 
-  const categories = [
-    'Întreținere',
-    'Reparații',
-    'Curățenie',
-    'Utilități',
-    'Administrare',
-    'Fond de reparații',
-    'Alte cheltuieli',
+  const categories = [{
+    key: 'Întreținere',
+    value: 'Întreținere',
+  },
+  {
+    key: 'Reparații',
+    value: 'Reparații',
+  },
+  {
+    key: 'Curățenie',
+    value: 'Curățenie',
+  },
+  {
+    key: 'Utilități',
+    value: 'Utilități',
+  },
+  {
+    key: 'Administrare',
+    value: 'Administrare',
+  },
+  {
+    key: 'Fond de reparații',
+    value: 'Fond_de_reparații',
+  },
+  {
+    key: 'Alte cheltuieli',
+    value: 'Alte_cheltuieli',
+  }
   ];
 
   useEffect(() => {
@@ -193,8 +213,8 @@ export function CreateExpenseModal({
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                    <SelectItem key={category.key} value={category.value}>
+                      {category.key}
                     </SelectItem>
                   ))}
                 </SelectContent>
