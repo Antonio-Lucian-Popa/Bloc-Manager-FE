@@ -8,22 +8,44 @@ import { useToast } from '@/hooks/use-toast';
 import { Expense } from '@/types';
 import { CreateExpenseModal } from '@/components/modals/CreateExpenseModal';
 import { Plus, Receipt, DollarSign, Calendar, Tag } from 'lucide-react';
-import { getExpenses } from '@/services/expenseService';
+import { getExpenses, getExpensesByAssociation } from '@/services/expenseService';
+import { getAssociations } from '@/services/associationService';
 
 export function ExpensesPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { toast } = useToast();
 
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (search !== debouncedSearch) {
+        setDebouncedSearch(search);
+      }
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [search]);
+
+
   useEffect(() => {
     loadExpenses();
-  }, []);
+  }, [debouncedSearch, page]);
 
   const loadExpenses = async () => {
     try {
-      const data = await getExpenses();
-      setExpenses(data);
+      //setLoading(true);
+      const associations = await getAssociations();
+      if (associations.content.length === 0) return;
+      const res = await getExpensesByAssociation(associations.content[0].id, page, pageSize, debouncedSearch);
+      setExpenses(res.content);
+      setTotal(res.totalElements);
     } catch (error) {
       toast({
         title: 'Eroare',
@@ -31,7 +53,7 @@ export function ExpensesPage() {
         variant: 'destructive',
       });
     } finally {
-      setLoading(false);
+      //setLoading(false);
     }
   };
 
@@ -88,7 +110,7 @@ export function ExpensesPage() {
       header: 'Status',
       cell: ({ row }: any) => {
         const status = row.original.status;
-        const variant = status === 'PAID' ? 'success' : status === 'OVERDUE' ? 'destructive' : 'secondary';
+        const variant = status === 'PAID' ? 'default' : status === 'OVERDUE' ? 'destructive' : 'secondary';
         const text = status === 'PAID' ? 'Plătit' : status === 'OVERDUE' ? 'Întârziat' : 'Pending';
         return <Badge variant={variant}>{text}</Badge>;
       },
@@ -135,9 +157,16 @@ export function ExpensesPage() {
           <DataTable
             columns={columns}
             data={expenses}
+            total={total}
+            page={page}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+            onSearchChange={setSearch}
             searchKey="description"
             searchPlaceholder="Căutați după descrierea cheltuielii..."
           />
+
         </CardContent>
       </Card>
 

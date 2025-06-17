@@ -8,6 +8,24 @@ export const getExpenses = async (blockId?: string): Promise<Expense[]> => {
   return res.data;
 };
 
+export const getExpensesByAssociation = async (
+  associationId: string,
+  page = 0,
+  size = 10,
+  search = ''
+): Promise<{ content: Expense[]; totalElements: number }> => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    search,
+  });
+
+  const res = await api.get(`/expenses/by-association/${associationId}?${params}`);
+  return res.data;
+};
+
+
+
 export const createExpense = async (
   data: Omit<Expense, 'id' | 'createdAt' | 'blockName' | 'status'>
 ): Promise<Expense> => {
