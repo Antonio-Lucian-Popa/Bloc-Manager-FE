@@ -10,6 +10,7 @@ import { User } from '@/types';
 import { InviteUserModal } from '@/components/modals/InviteUserModal';
 import { Plus, User as UserIcon, Mail, Calendar } from 'lucide-react';
 import { getUsers } from '@/services/userService';
+import { getAssociations } from '@/services/associationService';
 
 export function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -23,7 +24,9 @@ export function UsersPage() {
 
   const loadUsers = async () => {
     try {
-      const data = await getUsers();
+       const associations = await getAssociations();
+      if (associations.length === 0) return;
+      const data = await getUsers(associations[0].id);
       setUsers(data);
     } catch (error) {
       toast({
@@ -101,8 +104,8 @@ export function UsersPage() {
       cell: ({ row }: any) => (
         <div className="flex items-center space-x-2">
           <UserIcon className="h-4 w-4 text-gray-400" />
-          <Badge variant={getRoleVariant(row.original.role)}>
-            {getRoleLabel(row.original.role)}
+          <Badge variant={getRoleVariant(row.original.role.role)}>
+            {getRoleLabel(row.original.role.role)}
           </Badge>
         </div>
       ),

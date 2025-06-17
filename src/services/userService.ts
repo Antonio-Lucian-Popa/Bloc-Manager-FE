@@ -10,7 +10,7 @@ export const inviteUser = async (data: {
   await api.post(`/associations/${associationId}/invite`, data);
 };
 
-export const getUsers = async (): Promise<User[]> => {
-  const res = await api.get<User[]>('/users');
+export const getUsers = async (associationId: string): Promise<User[]> => {
+  const res = await api.get<User[]>(`/associations/users/${associationId}`);
   return res.data;
 };
