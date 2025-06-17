@@ -12,7 +12,7 @@ export const createBlock = async (
   associationId: string,
   data: Omit<Block, 'id' | 'createdAt' | 'associationName' | 'apartmentsCount'>
 ): Promise<Block> => {
-  const res = await api.post<Block>(`/associations/${associationId}/blocks`, data);
+  const res = await api.post<Block>(`/blocks/association/${associationId}`, data);
   return res.data;
 };
 
