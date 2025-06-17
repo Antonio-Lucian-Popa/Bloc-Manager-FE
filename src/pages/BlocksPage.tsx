@@ -9,6 +9,7 @@ import { Block } from '@/types';
 import { CreateBlockModal } from '@/components/modals/CreateBlockModal';
 import { Plus, Home, Building2, MapPin } from 'lucide-react';
 import { getBlocks } from '@/services/blocService';
+import { getAssociations } from '@/services/associationService';
 
 export function BlocksPage() {
   const [blocks, setBlocks] = useState<Block[]>([]);
@@ -22,7 +23,8 @@ export function BlocksPage() {
 
   const loadBlocks = async () => {
     try {
-      const data = await getBlocks();
+      const associations = await getAssociations();
+      const data = await getBlocks(associations[0].id);
       setBlocks(data);
     } catch (error) {
       toast({

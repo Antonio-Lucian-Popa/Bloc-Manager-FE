@@ -3,8 +3,7 @@ import api from './api';
 import { Block } from '@/types';
 
 export const getBlocks = async (associationId?: string): Promise<Block[]> => {
-  const query = associationId ? `?associationId=${associationId}` : '';
-  const res = await api.get<Block[]>(`/blocks${query}`);
+  const res = await api.get<Block[]>(`/blocks/association/${associationId}`);
   return res.data;
 };
 
