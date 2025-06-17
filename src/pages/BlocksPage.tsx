@@ -17,6 +17,7 @@ export function BlocksPage() {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [page, setPage] = useState(0);
   const pageSize = 10;
 
@@ -25,8 +26,18 @@ export function BlocksPage() {
   const { toast } = useToast();
 
   useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // Debounce for 300ms
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
+
+  useEffect(() => {
     loadBlocks();
-  }, [page, search]);
+  }, [page, debouncedSearch]);
 
   const loadBlocks = async () => {
     try {
