@@ -42,7 +42,7 @@ export function BlocksPage() {
   const loadBlocks = async () => {
     try {
       const associations = await getAssociations();
-      const data = await getBlocks(associations[0].id, page, pageSize, search);
+      const data = await getBlocks(associations.content[0].id, page, pageSize, search);
       setBlocks(data.content);
       setTotal(data.totalElements);
     } catch (error) {

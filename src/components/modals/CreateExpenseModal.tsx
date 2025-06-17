@@ -21,8 +21,9 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Block } from '@/types';
 import { Loader2 } from 'lucide-react';
-import { getBlocks } from '@/services/blocService';
+import { getBlocks, getBlocksList } from '@/services/blocService';
 import { createExpense } from '@/services/expenseService';
+import { getAssociations } from '@/services/associationService';
 
 interface CreateExpenseModalProps {
   open: boolean;
@@ -64,7 +65,8 @@ export function CreateExpenseModal({
 
   const loadBlocks = async () => {
     try {
-      const data = await getBlocks();
+      const associations = await getAssociations();
+      const data = await getBlocksList(associations.content[0].id);
       setBlocks(data);
     } catch (error) {
       toast({

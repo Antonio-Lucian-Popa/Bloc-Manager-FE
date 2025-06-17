@@ -23,6 +23,14 @@ export const getBlocks = async (
   return res.data;
 };
 
+export const getBlocksList = async (
+  associationId: string
+): Promise<Block[]> => {
+
+  const res = await api.get<Block[]>(`/blocks/associationList/${associationId}`);
+  return res.data;
+};
+
 
 export const createBlock = async (
   associationId: string,
