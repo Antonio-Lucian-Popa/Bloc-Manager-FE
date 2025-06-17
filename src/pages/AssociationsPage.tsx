@@ -16,6 +16,22 @@ export function AssociationsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { toast } = useToast();
 
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+   useEffect(() => {
+    const handler = setTimeout(() => {
+      if (search !== debouncedSearch) {
+        setDebouncedSearch(search);
+      }
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [debouncedSearch, page]);
+
   useEffect(() => {
     loadAssociations();
   }, []);
@@ -133,12 +149,18 @@ export function AssociationsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <DataTable
-            columns={columns}
-            data={associations}
-            searchKey="name"
-            searchPlaceholder="Căutați după numele asociației..."
-          />
+           <DataTable
+              columns={columns}
+              data={associations}
+              total={total}
+              page={page}
+              pageSize={pageSize}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+              onSearchChange={setSearch}
+              searchKey="name"
+              searchPlaceholder="Căutați după numele asociației..."
+            />
         </CardContent>
       </Card>
 
