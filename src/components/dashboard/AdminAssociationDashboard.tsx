@@ -45,7 +45,7 @@ export function AdminAssociationDashboard() {
       ]);
 
       setStats(statsData);
-      setAssociations(associationsData as Association[]);
+      setAssociations(associationsData);
       setRecentBlocks(blocksData.slice(0, 5));
     } catch (error) {
       toast({

@@ -1,11 +1,11 @@
 // services/associationService.ts
 
-import { CreateAssociations } from "@/types";
+import { Association, CreateAssociations } from "@/types";
 import api from "./api";
 
 
 export const getAssociations = async () => {
-  const res = await api.get('/associations/my');
+  const res = await api.get<Association[]>('/associations/my');
   return res.data;
 };
 
